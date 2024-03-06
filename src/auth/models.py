@@ -4,7 +4,7 @@ from src.database import Base
 
 metadata = MetaData()
 
-users = Table(
+user = Table(
     "user",
     metadata,
     Column("id", Integer, primary_key=True),

@@ -16,6 +16,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
 
+
     async def create(
         self,
         user_create: schemas.UC,
