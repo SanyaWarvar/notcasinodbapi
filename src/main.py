@@ -1,17 +1,11 @@
-from dataclasses import Field
-
 import psycopg2
-from fastapi import FastAPI, Depends
-from fastapi_users import fastapi_users, FastAPIUsers
-from pydantic import BaseModel
-
-from auth.auth import auth_backend
-from auth.database import User
-from auth.manager import get_user_manager
-from auth.schemas import UserRead, UserCreate
-from config import *
-from typing import List
-
+from fastapi import FastAPI
+from fastapi_users import FastAPIUsers
+from src.auth.base_config import auth_backend
+from src.auth.manager import get_user_manager
+from src.auth.models import User
+from src.auth.schemas import UserRead, UserCreate
+from src.config import *
 
 app = FastAPI(
     title="Lucky_000_DB_API"
