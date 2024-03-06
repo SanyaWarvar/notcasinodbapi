@@ -34,3 +34,10 @@ async def ladder(num: int, session=Depends(get_async_session)):
     res = await session.execute(query)
 
     return res.mappings().all()
+
+@router.get("/watch_all", status_code=200)
+async def watch_all(session=Depends(get_async_session)):
+    query = select(User.username, User.balance).order_by(User.balance.desc())
+    res = await session.execute(query)
+
+    return res.mappings().all()
