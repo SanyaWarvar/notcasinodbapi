@@ -7,5 +7,11 @@ app = FastAPI(
     title="Lucky_000_DB_API"
 )
 
+
+@app.get("/", status_code=200)
+def hello_world():
+    return {"detail": "Hello world"}
+
+
 app.include_router(auth_router)
 app.include_router(main_router)
