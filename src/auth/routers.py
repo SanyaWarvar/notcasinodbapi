@@ -17,7 +17,7 @@ router = APIRouter(
 @router.post("/register", status_code=200)
 async def register_user(user_create: UserCreate, session=Depends(get_async_session)):
     query = select(User).where(User.username == user_create.username)
-    res = await session.execute(query)
+    res = await session.scalar(query)
     if not res:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
