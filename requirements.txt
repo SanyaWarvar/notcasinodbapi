@@ -5,4 +5,4 @@ fastapi-users[sqlalchemy]
 python-dotenv
 sqlalchemy
 gunicorn
-QLAlchemy-Utils
+SQLAlchemy-Utils
