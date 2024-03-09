@@ -32,6 +32,14 @@ async def register_user(user_create: UserCreate, session=Depends(get_async_sessi
 
     return {"detail": "Success"}
 
+@router.post("/check", status_code=200)
+async def register_user(user_create: UserCreate, session=Depends(get_async_session)):
+    query = select(User).where(User.username == user_create.username)
+    res = await session.scalar(query)
+
+
+    return res
+
 
 @router.post("/generate_token", status_code=201)
 async def create_token(user_create: UserCreate, session=Depends(get_async_session)):
