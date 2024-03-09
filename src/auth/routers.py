@@ -18,7 +18,7 @@ router = APIRouter(
 async def register_user(user_create: UserCreate, session=Depends(get_async_session)):
     query = select(User).where(User.username == user_create.username)
     res = await session.execute(query)
-    if res:
+    if not res:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
             detail=f"User {user_create.username} already exist!"
