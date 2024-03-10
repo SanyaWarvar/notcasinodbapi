@@ -13,7 +13,7 @@ user = Table(
     Column("balance", Integer, default=1000, nullable=False)
 )
 
-Token = Table(
+token = Table(
     "tokens",
     metadata,
     Column("id", Integer, primary_key=True, index=True),
@@ -35,11 +35,11 @@ class User(Base):
 
 
 class Token(Base):
-    __tablename__ = "tokens"
-    id = Column(Integer, primary_key=True, index=True)
-    access_token = Column(String, unique=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    exp = Column(TIMESTAMP, default=datetime.now() + timedelta(minutes=60))
-    use_num = Column(Integer, default=1)
+   __tablename__ = "tokens"
+   id = Column(Integer, primary_key=True, index=True)
+   access_token = Column(String, unique=True, nullable=False)
+   user_id = Column(Integer, ForeignKey("users.id"))
+   exp = Column(TIMESTAMP, default=datetime.now() + timedelta(minutes=60))
+   use_num = Column(Integer, default=1)
 
-    # this_user = relationship("User", back_populates="tokens")
+   # this_user = relationship("User", back_populates="tokens")
