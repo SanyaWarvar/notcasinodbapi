@@ -5,7 +5,6 @@ from src.database import get_async_session
 from src.users.models import User, Token
 from src.users.schemes import UserCreate
 from sqlalchemy import select
-
 from secure import pwd_contex
 
 router = APIRouter(
@@ -31,14 +30,6 @@ async def register_user(user_create: UserCreate, session=Depends(get_async_sessi
     await session.commit()
 
     return {"detail": "Success"}
-
-@router.post("/check", status_code=200)
-async def register_user(user_create: UserCreate, session=Depends(get_async_session)):
-    query = select(User).where(User.username == user_create.username)
-    res = await session.scalar(query)
-
-
-    return [len(res), res]
 
 
 @router.post("/generate_token", status_code=201)
