@@ -137,17 +137,17 @@ async def double(access_token: str, session=Depends(get_async_session)):
             detail=f"Blackjack table doesn't exist!"
         )
 
-    if not t.is_double:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail=f"You can't do double!"
-        )
-
     player_cards = list(map(Card.get_from_str, t.main_hand.split(" ")))
     dealer_cards = list(map(Card.get_from_str, t.dealer_hand.split(" ")))
     deck = list(map(Card.get_from_str, t.deck.split(" ")))
 
     table = Table(t.bet, player_cards=player_cards, dealer_cards=dealer_cards, deck=deck)
+
+    if len(table.main_hand.cards) != 2:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail=f"You can't do double!"
+        )
 
     table.main_hand.double(table.deck)
     t.is_double = True
