@@ -13,10 +13,36 @@ router = APIRouter(
 )
 
 
+@router.get("/get_table", status_code=200)
+async def create_table(access_token: str, session=Depends(get_async_session)):
+    if not await check_token_valid(access_token, session):
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Token isn't valid!")
+
+    token: Token = await session.scalar(select(Token).where(Token.access_token == access_token))
+    user: User = await session.scalar(select(User).where(token.user_id == User.id))
+    t: Tables = await session.scalar(select(Tables).where(token.user_id == Tables.user_id))
+
+    if t is None:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail=f"Blackjack table for {user.username} don't exist!"
+        )
+
+    table = Table(t.bet)
+
+    return {
+        "player_cards": " ".join(list(map(str, table.main_hand.cards))),
+        "dealer_cards": " ".join(list(map(str, table.dealer_hand.cards)))
+    }
+
+
 @router.post("/create_table", status_code=200)
 async def create_table(bet: int, access_token: str, session=Depends(get_async_session)):
     if not await check_token_valid(access_token, session):
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Token isn't valid!")
+
+    if bet <= 0:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="You cann't place negative or zero bet!")
 
     token: Token = await session.scalar(select(Token).where(Token.access_token == access_token))
     user: User = await session.scalar(select(User).where(token.user_id == User.id))
@@ -48,7 +74,7 @@ async def create_table(bet: int, access_token: str, session=Depends(get_async_se
     }
 
 
-@router.get("/add_card", status_code=200)
+@router.post("/add_card", status_code=200)
 async def add_card(access_token: str, session=Depends(get_async_session)):
     if not await check_token_valid(access_token, session):
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Token isn't valid!")
@@ -83,7 +109,7 @@ async def add_card(access_token: str, session=Depends(get_async_session)):
     }
 
 
-@router.get("/stand", status_code=200)
+@router.post("/stand", status_code=200)
 async def stand(access_token: str, session=Depends(get_async_session)):
     if not await check_token_valid(access_token, session):
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Token isn't valid!")
@@ -123,7 +149,7 @@ async def stand(access_token: str, session=Depends(get_async_session)):
     }
 
 
-@router.get("/double", status_code=200)
+@router.post("/double", status_code=200)
 async def double(access_token: str, session=Depends(get_async_session)):
     if not await check_token_valid(access_token, session):
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Token isn't valid!")

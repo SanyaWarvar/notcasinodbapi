@@ -22,6 +22,9 @@ async def play(user_token: str, bet, session=Depends(get_async_session)):
     bet = ast.literal_eval(bet)
     money_delta = -1 * sum(bet.values())  # todo check values types
 
+    if min(bet.values()) <= 0:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="You cann't place negative or zero bet!")
+
     user_id: int = await session.scalar(select(Token.user_id).where(Token.access_token == user_token))
     user: User = await session.scalar(select(User).where(User.id == user_id))
 
